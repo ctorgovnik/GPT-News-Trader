@@ -7,7 +7,7 @@ import vonage
 import time
 
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 def get_completion(prompt, model="gpt-3.5-turbo"):
     messages = [{"role": "user", "content": prompt}]
@@ -99,10 +99,11 @@ ticker_list = []
 while (True):
     
     article_link = news_data.get_latest_article_link()
+    print(article_link)
     if (article_link != previous_link):
         previous_link = article_link
 
-        article_headline, article_key_points, article_text = news_data.get_article_content('https://www.cnbc.com/2023/07/13/fixed-income-investing-is-heating-up-how-to-play-it-per-bank-of-america.html')
+        article_headline, article_key_points, article_text = news_data.get_article_content('https://www.cnbc.com/2023/07/13/ubs-upgrades-big-pharma-stock-after-shares-drop-on-poor-drug-results.html')
 
         news_gpt = NewsGpt()
 
@@ -111,7 +112,7 @@ while (True):
         print(news_gpt)
 
         gpt_response = str(news_gpt)
-        recipients = ["19083070791", "16136069718"]
+        recipients = ["19083070791", "19142261849"]
         message = send_text_message(gpt_response, recipients)
         if (news_gpt.classification == "Breaking and Positive"):
             ticker_list.append(news_gpt.ticker)
