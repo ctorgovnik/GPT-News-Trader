@@ -31,10 +31,10 @@ def login():
     # Create login payload
     login_payload = {
         'authKey': authKey,
-        'password': '***', 
+        'password': 'Jess1ica*', 
         'pid': partnerId,
         'rememberMe': False,
-        'uuid': '***',
+        'uuid': 'cjt76@cornell.edu',
     }
 
     # Make the login POST request

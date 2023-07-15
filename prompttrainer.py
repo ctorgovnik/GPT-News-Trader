@@ -7,7 +7,7 @@ import vonage
 import time
 
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 def get_completion(prompt, model="gpt-3.5-turbo"):
     messages = [{"role": "user", "content": prompt}]
@@ -96,14 +96,15 @@ def send_text_message(message, recipients):
 
 previous_link = ""
 ticker_list = []
+session = news_data.login()
 while (True):
     
-    article_link = news_data.get_latest_article_link()
+    article_link = news_data.get_latest_article_link(session)
     print(article_link)
     if (article_link != previous_link):
         previous_link = article_link
 
-        article_headline, article_key_points, article_text = news_data.get_article_content('https://www.cnbc.com/2023/07/13/ubs-upgrades-big-pharma-stock-after-shares-drop-on-poor-drug-results.html')
+        article_headline, article_key_points, article_text = news_data.get_article_content(article_link, session)
 
         news_gpt = NewsGpt()
 
