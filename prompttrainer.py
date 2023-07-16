@@ -7,31 +7,29 @@ import vonage
 import time
 
 
-openai.api_key = "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"
+openai.api_key = "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"
+
 
 def get_completion(prompt, model="gpt-3.5-turbo"):
     messages = [{"role": "user", "content": prompt}]
     response = openai.ChatCompletion.create(
         model=model,
         messages=messages,
-        temperature=0.0, # this is the degree of randomness of the model's output
+        temperature=0.0,  # this is the degree of randomness of the model's output
     )
     return response.choices[0].message["content"]
 
 
-
 class NewsGpt:
 
-
-  def __init__(self, ticker="", classification="", description=""):
+    def __init__(self, ticker="", classification="", description=""):
         self.ticker = ticker
         self.classification = classification
         self.description = description
 
-
-  def categorize_article(self, article_text):
-      # Construct the prompt
-      prompt = f'''
+    def categorize_article(self, article_text):
+        # Construct the prompt
+        prompt = f'''
       Here is a news article: "{article_text}". Please categorize it into one of the following categories:
 
       1. "Breaking and Positive" - The news is just out, it's the first or one of the first articles on \
@@ -61,50 +59,58 @@ class NewsGpt:
       If you cannot find a stock ticker, also mention in the decription that the article does not mention any specific stocks, and return "N/A" for "ticker".
       '''
 
-      response = get_completion(prompt)
+        response = get_completion(prompt)
 
-      response_json = json.loads(response)
+        response_json = json.loads(response)
 
-      # Extract values from the JSON
-      self.ticker = response_json["ticker"]
-      self.classification = response_json["classification"]
-      self.description = response_json["description"]
-      # return response
+        # Extract values from the JSON
+        self.ticker = response_json["ticker"]
+        self.classification = response_json["classification"]
+        self.description = response_json["description"]
+        # return response
 
-  def __str__(self):
-      return f"ticker: {self.ticker}\n\nclassification: {self.classification}\n\ndescription: {self.description}"
+    def classify_breaking_positive(self, article):
+        return
+
+    def __str__(self):
+        return f"ticker: {self.ticker}\n\nclassification: {self.classification}\n\ndescription: {self.description}"
 
 
 def send_text_message(message, recipients):
-    
+
     client = vonage.Client(key="25dad562", secret="m4vHCnYMHJIQ4whC")
     sms = vonage.Sms(client)
-    
+
     for recipient in recipients:
         responseData = sms.send_message(
-        {
-            "from": "15703306259",
-            "to": recipient,
-            "text": message,
-        }
+            {
+                "from": "15703306259",
+                "to": recipient,
+                "text": message,
+            }
         )
 
         if responseData["messages"][0]["status"] == "0":
             print("Message sent successfully.")
         else:
-            print(f"Message failed with error: {responseData['messages'][0]['error-text']}")
+            print(
+                f"Message failed with error: {responseData['messages'][0]['error-text']}")
+
+
+# article reader loop
 
 previous_link = ""
 ticker_list = []
 session = news_data.login()
 while (True):
-    
+
     article_link = news_data.get_latest_article_link(session)
     print(article_link)
     if (article_link != previous_link):
         previous_link = article_link
 
-        article_headline, article_key_points, article_text = news_data.get_article_content(article_link, session)
+        article_headline, article_key_points, article_text = news_data.get_article_content(
+            article_link, session)
 
         news_gpt = NewsGpt()
 
@@ -117,9 +123,7 @@ while (True):
         message = send_text_message(gpt_response, recipients)
         if (news_gpt.classification == "Breaking and Positive"):
             ticker_list.append(news_gpt.ticker)
-        
-    
+
     else:
         print("no new articles")
     time.sleep(900)
-   
