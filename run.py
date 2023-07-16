@@ -15,12 +15,12 @@ while (True):
     if (article_link != previous_link):
         previous_link = article_link
 
-        article_headline, article_key_points, article_text = news_data.get_article_content(
+        article_headline, article_key_points, article_text, tickers = news_data.get_article_content(
             article_link, session)
 
         news_gpt = NewsGpt()
 
-        news_gpt.categorize_article(article_text)
+        news_gpt.categorize_article(article_text, tickers)
 
         print(news_gpt)
 

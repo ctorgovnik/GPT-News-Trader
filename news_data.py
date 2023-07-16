@@ -97,6 +97,18 @@ def get_article_content(link, session):
 
     print(article_key_points)
 
+    # get tickers
+    tickers = []
+    article_tickers_ul = soup_article.find('ul', class_='RelatedQuotes-list')
+
+    if article_tickers_ul is not None:
+      tickers_li = article_tickers_ul.find_all('li', class_='QuoteItem-item')
+      tickers = [ticker.text for ticker in tickers_li]
+    else:
+      print("could not find tickers")
+
+    print(tickers)
+
     # get article body
 
     article_body_div = soup_article.find(
@@ -126,10 +138,10 @@ def get_article_content(link, session):
 
     print(article_body)
 
-    return article_headline, article_key_points, article_body
+    return article_headline, article_key_points, article_body, tickers
 
 
 session = login()
 article_link = get_latest_article_link(session)
-article_headline, article_key_points, article_text = get_article_content(
+article_headline, article_key_points, article_text, tickers = get_article_content(
     article_link, session)

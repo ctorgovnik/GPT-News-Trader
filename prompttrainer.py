@@ -7,7 +7,7 @@ import vonage
 import time
 
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 
 def get_completion(prompt, model="gpt-3.5-turbo"):
@@ -22,15 +22,17 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
 
 class NewsGpt:
 
-    def __init__(self, ticker="", classification="", description=""):
+    def __init__(self, ticker="N/A", classification="", description=""):
         self.ticker = ticker
         self.classification = classification
         self.description = description
 
-    def categorize_article(self, article_text):
+    def categorize_article(self, article_text, tickers):
+        self.ticker = tickers
         # Construct the prompt
         prompt = f'''
-      Here is a news article: "{article_text}". Please categorize it into one of the following categories:
+      Here is a news article: "{article_text}". The article is about these tickers: "{tickers}". \
+      If the tickers is 'N/A' then the article doesn't mention any stocks. Please categorize it into one of the following categories:
 
       1. "Breaking and Positive" - The news is just out, it's the first or one of the first articles on \
       the subject, and the content is likely to cause the stock price to increase. \
