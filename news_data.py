@@ -83,6 +83,16 @@ def get_article_content(link, session):
 
     print(article_headline)
 
+    article_time_div = soup_article.find('div', class_='ArticleHeader-time')
+    article_time = ''
+    if article_time_div is not None:
+      article_time = article_time_div.find('time', class_='datetime').text
+    else:
+      print('no time found')
+
+    print(article_time)
+
+
     # get article key points
     article_key_points_div = soup_article.find(
         'div', class_='RenderKeyPoints-list')

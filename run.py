@@ -20,7 +20,7 @@ while (True):
 
         news_gpt = NewsGpt()
 
-        news_gpt.categorize_article(article_text, tickers)
+        news_gpt.categorize_article(article_text)
 
         print(news_gpt)
 
@@ -28,7 +28,8 @@ while (True):
         recipients = ["19083070791", "19142261849"]
         message = pt.send_text_message(gpt_response, recipients)
         if (news_gpt.classification == "Breaking and Positive"):
-            ticker_list.append(news_gpt.ticker)
+            # ticker_list.append(news_gpt.ticker)
+            news_gpt.description_breaking_positive(article_text, news_gpt.ticker)
 
     else:
         print("no new articles")
