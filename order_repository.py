@@ -1,11 +1,12 @@
 import pandas as pd
+import datetime
 
 class OrderRepository:
     def __init__(self):
         self.orders_data = pd.DataFrame(columns=['OrderID', 'Article', 'Ticker', 'Category', 'Date', 'Time', 'Quantity', 'Price'])
         self.last_order_id = 0
 
-    def add_order(self, article, ticker, category, date, time, quantity, price):
+    def add_order(self, article, ticker, category, quantity, price):
         """
         Add an order to the repository.
 
@@ -20,13 +21,18 @@ class OrderRepository:
         self.last_order_id += 1
         order_id = self.last_order_id
 
+        # Get the current date and time
+        current_date = datetime.now().strftime('%Y-%m-%d')
+        current_time = datetime.now().strftime('%H:%M:%S')
+
+
         self.orders_data = self.orders_data.append({
             'OrderID': order_id,
             'Article': article,
             'Ticker': ticker,
             'Category': category,
-            'Date': date,
-            'Time': time,
+            'Date': current_date,
+            'Time': current_time,
             'Quantity': quantity,
             'Price': price
         }, ignore_index=True)

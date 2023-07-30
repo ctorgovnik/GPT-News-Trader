@@ -2,6 +2,8 @@ import news_data
 import prompttrainer as pt
 from prompttrainer import NewsGpt
 import time
+from order_repository import OrderRepository as order_repo
+import yfinance as yf
 
 # article reader loop
 
@@ -31,6 +33,23 @@ while (True):
             # ticker_list.append(news_gpt.ticker)
             news_gpt.description_breaking_positive(article_text, news_gpt.ticker)
 
+            if (news_gpt.ticker!= "N/A"):
+                # need to treat multiple ticker case
+                price = get_current_stock_price(news_gpt.ticker)
+                order_repo.add_order(article_headline, news_gpt.ticker, news_gpt.classification_breaking_positive, 1, price)
+                # also have something to save the datafrae in case program crashes or stops
+
     else:
         print("no new articles")
     time.sleep(900)
+
+
+    def get_current_stock_price(self, ticker):
+        try:
+            # Fetch current stock price using yfinance
+            stock_data = yf.download(ticker, period='1d', interval='1m')
+            current_price = stock_data.iloc[-1]['Close']
+            return current_price
+        except Exception as e:
+            print(f"Error fetching stock price: {e}")
+            return None
