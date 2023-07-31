@@ -4,12 +4,25 @@ from prompttrainer import NewsGpt
 import time
 from order_repository import OrderRepository as order_repo
 import yfinance as yf
+from order_repository_sql import OrderRepositorySQL as order_sql
+from category_repository import CategoryRepository as category_repo
 
 # article reader loop
 
 previous_link = ""
 ticker_list = []
 session = news_data.login()
+
+host = "localhost"
+username = "root"
+password = "***"
+database = "prompttrade"
+order_repo = order_sql(host=host, user=username, password=password, database=database)
+category_repo = category_repo(host=host, user=username, password=password, database=database)
+
+order_repo.create_orders_table()
+category_repo.create_classification_table()
+
 while (True):
 
     article_link = news_data.get_latest_article_link(session)
@@ -29,6 +42,9 @@ while (True):
         gpt_response = str(news_gpt)
         recipients = ["19083070791", "19142261849"]
         message = pt.send_text_message(gpt_response, recipients)
+
+        category_repo.add_classification(article_headline, news_gpt.ticker, news_gpt.classification, news_gpt.classification_breaking_positive)
+
         if (news_gpt.classification == "Breaking and Positive"):
             # ticker_list.append(news_gpt.ticker)
             news_gpt.description_breaking_positive(article_text, news_gpt.ticker)
@@ -36,6 +52,7 @@ while (True):
             if (news_gpt.ticker!= "N/A"):
                 # need to treat multiple ticker case
                 price = get_current_stock_price(news_gpt.ticker)
+                # order_repo.add_order(article_headline, news_gpt.ticker, news_gpt.classification_breaking_positive, 1, price)
                 order_repo.add_order(article_headline, news_gpt.ticker, news_gpt.classification_breaking_positive, 1, price)
                 # also have something to save the datafrae in case program crashes or stops
 

@@ -29,10 +29,10 @@ def login():
     # Create login payload
     login_payload = {
         'authKey': authKey,
-        'password': 'Jess1ica*',
+        'password': '***',
         'pid': partnerId,
         'rememberMe': False,
-        'uuid': 'cjt76@cornell.edu',
+        'uuid': '***',
     }
 
     # Make the login POST request
@@ -79,7 +79,12 @@ def get_article_content(link, session):
     article_headline_h1 = soup_article.find(
         'h1', class_='ArticleHeader-headline')
 
-    article_headline = article_headline_h1.text
+    article_headline = ''
+    if article_headline_h1 is not None:
+      article_headline =  article_headline_h1.text
+    else:
+      print('no article text found')
+   
 
     print(article_headline)
 
@@ -134,14 +139,23 @@ def get_article_content(link, session):
                 if hidden_span.text not in article_body:
                     article_body += hidden_span.text
         else:
-            article_body_group_div = article_body_div.find(
-                'div', class_='group')
-            if article_body_group_div is not None:
-                article_body_p = article_body_group_div.find_all('p')
-                article_body_list = [p.text for p in article_body_p]
-                for par in article_body_list:
-                    if par not in article_body:
-                        article_body += par
+            # article_body_group_div = article_body_div.find(
+            #     'div', class_='group')
+            # if article_body_group_div is not None:
+            #     article_body_p = article_body_group_div.find_all('p')
+            #     article_body_list = [p.text for p in article_body_p]
+            #     for par in article_body_list:
+            #         if par not in article_body:
+            #             article_body += par
+            # Find all 'group' divs and extract text from paragraphs inside each div
+            article_body_group_divs = article_body_div.find_all('div', class_='group')
+            for group_div in article_body_group_divs:
+                if group_div is not None:
+                    article_body_p = group_div.find_all('p')
+                    article_body_list = [p.text for p in article_body_p]
+                    for par in article_body_list:
+                        if par not in article_body:
+                            article_body += par
 
     else:
         print("Could not find body of article")

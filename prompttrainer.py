@@ -7,7 +7,7 @@ import vonage
 import time
 
 
-openai.api_key = "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"
+openai.api_key = "***"
 
 
 def get_completion(prompt, model="gpt-3.5-turbo"):
