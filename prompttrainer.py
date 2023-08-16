@@ -5,9 +5,10 @@ import json
 # from twilio.rest import Client
 import vonage
 import time
+import config
 
 
-openai.api_key = "***"
+openai.api_key = config.openai_api_key
 
 
 def get_completion(prompt, model="gpt-3.5-turbo"):
@@ -37,9 +38,10 @@ class NewsGpt:
       Sometimes they will be in ticker abbrevation or it will name the full company, but always put it in ticker format. \
       If there is no ticker named then return 'N/A' for ticker. Please categorize it into one of the following categories:
 
-      1. "Breaking and Positive" - The news is just out, it's the first or one of the first articles on \
-      the subject, and the content is likely to cause the stock price to increase. \
-      The market might not have fully absorbed the news yet, providing a potential buying opportunity.\
+      1. "Breaking and Positive" - News that has just been released or reported in real-time or occurred within last few minutes. \ 
+      The content is likely to cause the stock price to increase, and the market might not have fully absorbed the information yet, \ 
+      providing a potential buying opportunity. This article is one of the first reports on the subject, \ 
+      and the stock's reaction to the news may still be unfolding. \
       If the article does not mention a significant increase in the stock price, it is more likely to be in this \
       category.
       
@@ -55,7 +57,8 @@ class NewsGpt:
       
       4. "Stale and Negative" - The news is not fresh anymore, it's been some hours (or longer) \
       since the story broke, and the content is negative. The information is likely already reflected in the \
-      stock price, and it might not be a new selling opportunity. If the article mentions that the stock price \
+      stock price, and it might not be a new selling opportunity. It could be discussing an earnings report that just happened, for example \ 
+      If the article mentions that the stock price \
       has already decreased significantly, it is more likely to be in this category.
 
       5. "Other" - The article does not fit into any of the listed categories.
@@ -118,18 +121,18 @@ class NewsGpt:
 
     def __str__(self):
         return f"""ticker: {self.ticker}\n\nclassification: {self.classification}\n\ndescription: {self.description} \n\n\n
-        breaking/positive classification: {self.description_breaking_positive} \n\n breaking/positive decription: {self.description_breaking_positive}"""
+        breaking/positive classification: {self.classification_breaking_positive} \n\n breaking/positive decription: {self.description_breaking_positive}"""
 
 
 def send_text_message(message, recipients):
 
-    client = vonage.Client(key="25dad562", secret="m4vHCnYMHJIQ4whC")
+    client = vonage.Client(key=config.vonage_key, secret=config.vonage_secret)
     sms = vonage.Sms(client)
 
     for recipient in recipients:
         responseData = sms.send_message(
             {
-                "from": "15703306259",
+                "from": config.vonage_number,
                 "to": recipient,
                 "text": message,
             }

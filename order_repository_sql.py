@@ -1,5 +1,6 @@
 import mysql.connector
 import datetime
+import yfinance as yf
 
 class OrderRepositorySQL:
     def __init__(self, host, user, password, database):
@@ -38,19 +39,40 @@ class OrderRepositorySQL:
             cursor.execute(create_table_query)
         self.db_connection.commit()
 
-    def add_order(self, article, ticker, category, quantity, price):
+    def get_current_stock_price(self, ticker):
+        try:
+            # Fetch current stock price using yfinance
+            stock_data = yf.download(ticker, period='1d', interval='1m')
+            # price = price_series.iloc[0] if not price_series.empty else None
+            current_price = stock_data.iloc[-1]['Close'] if not stock_data.empty else None
+            return current_price
+        except Exception as e:
+            print(f"Error fetching stock price: {e}")
+            return None
+
+    def add_order(self, article, tickers_str, category, quantity):
+        # Split the comma-separated string of tickers into a list of tickers
+        tickers_list = tickers_str.split(',')
+
         # Get the current date and time
         current_date = datetime.datetime.now().strftime('%Y-%m-%d')
         current_time = datetime.datetime.now().strftime('%H:%M:%S')
 
-        # Insert the order into the orders table
-        insert_query = """
-        INSERT INTO orders (Article, Ticker, Category, Date, Time, Quantity, Price)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
-        """
-        with self.db_connection.cursor() as cursor:
-            cursor.execute(insert_query, (article, ticker, category, current_date, current_time, quantity, price))
-        self.db_connection.commit()
+        # Loop through the list of tickers and insert each ticker into a separate row
+        for ticker in tickers_list:
+            # Convert the ticker to a string
+            ticker_str = str(ticker.strip())  # Remove any leading/trailing spaces
+
+            price = self.get_current_stock_price(ticker_str)
+
+            # Insert the order into the orders table
+            insert_query = """
+            INSERT INTO orders_test (Article, Ticker, Category, Date, Time, Quantity, Price)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """
+            with self.db_connection.cursor() as cursor:
+                cursor.execute(insert_query, (article, ticker_str, category, current_date, current_time, quantity, price))
+            self.db_connection.commit()
 
     def analyze_data(self):
         """
@@ -64,4 +86,6 @@ class OrderRepositorySQL:
         # return analysis_results
 
     # ... (other methods)
+
+
 
