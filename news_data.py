@@ -59,9 +59,9 @@ def login():
 
     return s
 
-# Example usage
-session = login()
-# Now use the 'session' object to make further requests.
+# # Example usage
+# session = login()
+# # Now use the 'session' object to make further requests.
 
 
 
@@ -215,9 +215,9 @@ def get_article_content(link, session):
     return article_headline, article_time, article_key_points, article_body, tickers
 
 
-session = login()
-article_link = get_latest_article_link(session)
-article_headline, article_time, article_key_points, article_text, tickers = get_article_content(
-    article_link, session)
+# session = login()
+# article_link = get_latest_article_link(session)
+# article_headline, article_time, article_key_points, article_text, tickers = get_article_content(
+#     article_link, session)
 
-print('article time: ', article_time)
+# print('article time: ', article_time)

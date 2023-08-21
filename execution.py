@@ -65,10 +65,10 @@ class ExecutionBot:
 
         return positions
 
-bot = ExecutionBot()
+# bot = ExecutionBot()
 
-# bot.get_account_info()
-bot.get_positions()
+# # bot.get_account_info()
+# bot.get_positions()
 
 # bot.buy_order('AAPL', .01)
 
