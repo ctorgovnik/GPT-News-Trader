@@ -14,8 +14,8 @@ class CategoryRepository:
         )
 
         # Create the categories and article_links tables if they don't exist
-        self.create_classification_table()
         self.create_article_links_table()
+        self.create_classification_table()
 
     def __del__(self):
         # Close the MySQL database connection when the object is deleted
