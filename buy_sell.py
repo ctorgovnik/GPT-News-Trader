@@ -94,7 +94,7 @@ def buy_orders(bot, session, shared_order_list, order_lock, bot_lock):
         else:
             print('article is none')
 
-        time.sleep(300)
+        time.sleep(60)
 
 
 def sell_orders(bot, shared_order_list, order_lock, bot_lock):
