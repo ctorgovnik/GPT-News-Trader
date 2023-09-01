@@ -55,7 +55,8 @@ def buy_orders(bot, session, shared_order_list, order_lock, bot_lock):
 
                 news_gpt = NewsGpt()
                 news_gpt.categorize_article(article_text)
-
+                category_repo1.add_classification(article_headline, news_gpt.ticker, news_gpt.classification,
+                                                    news_gpt.classification_breaking_positive, article_time, article_link)
                 tickers_list = news_gpt.ticker.split(',')
                 for ticker in tickers_list:
                     ticker = ticker.strip()
@@ -82,8 +83,7 @@ def buy_orders(bot, session, shared_order_list, order_lock, bot_lock):
                             order_repo.add_order(
                                 article_headline, news_gpt.ticker, news_gpt.classification_breaking_positive, 1)
 
-                category_repo1.add_classification(article_headline, news_gpt.ticker, news_gpt.classification,
-                                                    news_gpt.classification_breaking_positive, article_time, article_link)
+                
 
                 print(news_gpt)
                 gpt_response = str(news_gpt)
