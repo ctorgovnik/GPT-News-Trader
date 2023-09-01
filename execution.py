@@ -37,8 +37,7 @@ class ExecutionBot:
 
         # Submitting the order and then printing the returned object
         market_order = self.trading_client.submit_order(ticker, qty, 'buy', type, time_in_force)
-        for property_name, value in market_order:
-            print(f"\"{property_name}\": {value}")
+        print("Buy order submitted:", market_order)
 
         return market_order
 
@@ -53,8 +52,7 @@ class ExecutionBot:
 
         # Submitting the order and then printing the returned object
         market_order = self.trading_client.submit_order(ticker, qty, 'sell', type, time_in_force)
-        for property_name, value in market_order:
-            print(f"\"{property_name}\": {value}")
+        print("Sell order submitted:", market_order)
         
         return market_order
         
