@@ -20,7 +20,7 @@ def get_latest_price(ticker):
 
 def is_before_market_close():
     # Get the current time in UTC
-    current_time_utc = datetime.datetime.now(pytz.utc)
+    current_time_utc = datetime.now(pytz.utc)
     
     # Convert to Eastern Time
     eastern_time = current_time_utc.astimezone(pytz.timezone('US/Eastern'))
