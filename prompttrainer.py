@@ -35,8 +35,10 @@ class NewsGpt:
         # Construct the prompt
         prompt = f'''
       Here is a news article: "{article_text}". Find the ticker or tickers of the article. \
-      Sometimes they will be in ticker abbrevation or it will name the full company, but always put it in ticker format. \
-      If there is no ticker named then return 'N/A' for ticker. Please categorize it into one of the following categories:
+      Sometimes they will be in ticker abbrevation or it will name the full company, but always put it in ticker format. \  
+      If there is no ticker named then return 'N/A' for ticker. There will be an article at the beginning of the day that says \
+      'Here are (day of the week) biggest analyst calls: stocks'. This article could be breaking and positive for some stocks, \
+        but it is worth analyzing further. Please categorize it into one of the following categories:
 
       1. "Breaking and Positive" - News that has just been released or reported in real-time or occurred within last few minutes. \ 
       The content is likely to cause the stock price to increase, and the market might not have fully absorbed the information yet, \ 
